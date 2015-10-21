@@ -1,6 +1,5 @@
 (function() {
-  var description;
-  description = {
+  var description = {
     "Total Notifications": {
       source: "http://localhost:4567/",
       GaugeLabel: {
@@ -23,7 +22,6 @@
       }
     },
    
-
     "Total Installs": {
       source: "http://localhost:4567/",
       GaugeLabel: {
@@ -94,6 +92,7 @@
 
   var g = new Graphene;
   g.demo();
+  g.silent();
   g.build(description);
 
   $(document).ready(function () {

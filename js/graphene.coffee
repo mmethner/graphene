@@ -1,13 +1,16 @@
-
-
 class Graphene
-  constructor:->
+  constructor: ->
     @models = {}
+    @is_silent = false
+    @is_demo = false
 
-  demo:->
+  demo: ->
     @is_demo = true
 
-  build: (json)=>
+  silent: ->
+    @is_silent = true
+
+  build: (json) =>
     _.each _.keys(json), (k)=>
       console.log "building [#{k}]"
       if @is_demo
@@ -23,14 +26,19 @@ class Graphene
       ts = new klass(model_opts)
       @models[k] = ts
 
-      _.each json[k], (opts, view)=>
+      _.each json[k], (opts, view) =>
         klass = eval("Graphene.#{view}View")
-        console.log _.extend({ model: ts, ymin:@getUrlParam(model_opts.source, "yMin"), ymax:@getUrlParam(model_opts.source, "yMax") }, opts)
-        new klass(_.extend({ model: ts, ymin:@getUrlParam(model_opts.source, "yMin"), ymax:@getUrlParam(model_opts.source, "yMax") }, opts))
+        params = _.extend({
+          model: ts,
+          ymin: @getUrlParam(model_opts.source, "yMin"),
+          ymax: @getUrlParam(model_opts.source, "yMax")
+        }, opts)
+        new klass(params)
         ts.start()
 
   stop: () =>
     _.each @models, (chart) =>
+      console.log('stop polling') if not @is_silent
       chart.stop()
 
   discover: (url, dash, parent_specifier, cb)->
@@ -67,21 +75,19 @@ class Graphene
 
 @Graphene = Graphene
 
-
-
-
 class Graphene.GraphiteModel extends Backbone.Model
   defaults:
-    source:''
+    source: ''
     data: null
     ymin: 0
     ymax: 0
     refresh_interval: 10000
+    silent:
 
-  debug:()->
+  debug: () ->
     console.log("#{@get('refresh_interval')}")
 
-  start: ()=>
+  start: () =>
     @refresh()
     console.log("Starting to poll at #{@get('refresh_interval')}")
     @t_index = setInterval(@refresh, @get('refresh_interval'))
@@ -107,10 +113,6 @@ class Graphene.GraphiteModel extends Backbone.Model
   process_data: ()=>
     return null
 
-
-
-
-
 class Graphene.DemoTimeSeries extends Backbone.Model
   defaults:
     range: [0, 1000]
@@ -119,7 +121,7 @@ class Graphene.DemoTimeSeries extends Backbone.Model
     num_series: 2
     refresh_interval: 3000
 
-  debug:()->
+  debug: ()->
     console.log("#{@get('refresh_interval')}")
 
   start: ()=>
@@ -136,7 +138,7 @@ class Graphene.DemoTimeSeries extends Backbone.Model
 
     _.each @data, (d)=>
       @add_points(new Date(), @get('range'), @get('num_points'), @point_interval, d)
-    @set(data:@data)
+    @set(data: @data)
 
     @t_index = setInterval(@refresh, @get('refresh_interval'))
 
@@ -164,15 +166,13 @@ class Graphene.DemoTimeSeries extends Backbone.Model
     _.each _.range(num_new_points), (i)=>
 # lay out i points in time. base time x i*interval
       new_point = [
-        range[0] + Math.random()*(range[1]-range[0]),
-        new Date(start_date.getTime() + (i+1)*point_interval)
+        range[0] + Math.random() * (range[1] - range[0]),
+        new Date(start_date.getTime() + (i + 1) * point_interval)
       ]
       d.points.push(new_point)
       d.points.shift() if d.points.length > @get('num_points')
     d.ymin = d3.min(d.points, (d) -> d[0])
     d.ymax = d3.max(d.points, (d) -> d[0])
-
-
 
 
 class Graphene.BarChart extends Graphene.GraphiteModel
@@ -184,7 +184,7 @@ class Graphene.BarChart extends Graphene.GraphiteModel
       max = d3.max(dp.datapoints, (d) -> d[0])
       return null unless max != undefined
 
-      _.each dp.datapoints, (d) -> d[1] = new Date(d[1]*1000)
+      _.each dp.datapoints, (d) -> d[1] = new Date(d[1] * 1000)
       return {
       points: _.reject(dp.datapoints, (d)-> d[0] == null),
       ymin: min,
@@ -192,10 +192,10 @@ class Graphene.BarChart extends Graphene.GraphiteModel
       label: dp.target
       }
     data = _.reject data, (d)-> d == null
-    @set(data:data)
+    @set(data: data)
 
 class Graphene.TimeSeries extends Graphene.GraphiteModel
-  process_data: (js)=>
+  process_data: (js) =>
     data = _.map js, (dp)->
       min = d3.min(dp.datapoints, (d) -> d[0])
       return null unless min != undefined
@@ -203,7 +203,7 @@ class Graphene.TimeSeries extends Graphene.GraphiteModel
       return null unless max != undefined
       last = _.last(dp.datapoints)[0] ? 0
       return null unless last != undefined
-      _.each dp.datapoints, (d) -> d[1] = new Date(d[1]*1000)
+      _.each dp.datapoints, (d) -> d[1] = new Date(d[1] * 1000)
       return {
       points: _.reject(dp.datapoints, (d)-> d[0] == null),
       ymin: min,
@@ -212,22 +212,18 @@ class Graphene.TimeSeries extends Graphene.GraphiteModel
       label: dp.target
       }
     data = _.reject data, (d)-> d == null
-    @set(data:data)
-
-
-
-
+    @set(data: data)
 
 
 class Graphene.GaugeGadgetView extends Backbone.View
   className: 'gauge-gadget-view'
   tagName: 'div'
   initialize: ()->
-    @title  = @options.title
-    @type   = @options.type
+    @title = @options.title
+    @type = @options.type
 
     @parent = @options.parent || '#parent'
-    @value_format  = @options.value_format || ".3s"
+    @value_format = @options.value_format || ".3s"
     @null_value = 0
 
     @from = @options.from || 0
@@ -237,7 +233,7 @@ class Graphene.GaugeGadgetView extends Backbone.View
 
     @vis = d3.select(@parent).append("div")
     .attr("class", "ggview")
-    .attr("id", @title+"GaugeContainer")
+    .attr("id", @title + "GaugeContainer")
 
     config =
       size: @options.size || 120
@@ -248,10 +244,10 @@ class Graphene.GaugeGadgetView extends Backbone.View
 
 
     config.redZones = []
-    config.redZones.push({ from: @options.red_from || 0.9*@to, to: @options.red_to || @to })
+    config.redZones.push({from: @options.red_from || 0.9 * @to, to: @options.red_to || @to})
 
     config.yellowZones = []
-    config.yellowZones.push({ from: @options.yellow_from || 0.75*@to, to: @options.yellow_to || 0.9*@to })
+    config.yellowZones.push({from: @options.yellow_from || 0.75 * @to, to: @options.yellow_to || 0.9 * @to})
 
     @gauge = new Gauge("#{@title}GaugeContainer", config)
     @gauge.render()
@@ -260,36 +256,37 @@ class Graphene.GaugeGadgetView extends Backbone.View
     console.log("GG view ")
 
 
-  by_type:(d)=>
+  by_type: (d)=>
     switch @type
       when "min"     then d.ymin
       when "max"     then d.ymax
       when "current" then d.last
-      else d.points[0][0]
+      else
+        d.points[0][0]
 
   render: ()=>
     console.log("rendering.")
     data = @model.get('data')
-    datum = if data && data.length > 0 then data[0] else { ymax: @null_value, ymin: @null_value, points: [[@null_value, 0]] }
+    datum = if data && data.length > 0 then data[0] else {
+    ymax: @null_value,
+    ymin: @null_value,
+    points: [[@null_value, 0]]
+    }
 
     @observer(@by_type(datum)) if @observer
 
     @gauge.redraw(@by_type(datum), @value_format)
 
 
-
-
-
-
 class Graphene.GaugeLabelView extends Backbone.View
   className: 'gauge-label-view'
   tagName: 'div'
   initialize: ()->
-    @unit   = @options.unit
-    @title  = @options.title
-    @type   = @options.type
+    @unit = @options.unit
+    @title = @options.title
+    @type = @options.type
     @parent = @options.parent || '#parent'
-    @value_format  = @options.value_format || ".3s"
+    @value_format = @options.value_format || ".3s"
     @value_format = d3.format(@value_format)
     @null_value = 0
     @observer = @options.observer
@@ -305,17 +302,22 @@ class Graphene.GaugeLabelView extends Backbone.View
     console.log("GL view ")
 
 
-  by_type:(d)=>
+  by_type: (d)=>
     switch @type
       when "min"     then d.ymin
       when "max"     then d.ymax
       when "current" then d.last
-      else d.points[0][0]
+      else
+        d.points[0][0]
 
   render: ()=>
     data = @model.get('data')
     console.log data
-    datum = if data && data.length > 0 then data[0] else { ymax: @null_value, ymin: @null_value, points: [[@null_value, 0]] }
+    datum = if data && data.length > 0 then data[0] else {
+    ymax: @null_value,
+    ymin: @null_value,
+    points: [[@null_value, 0]]
+    }
 
     # let observer know about this
     @observer(@by_type(datum)) if @observer
@@ -328,16 +330,15 @@ class Graphene.GaugeLabelView extends Backbone.View
 
     metric = metric_items.enter()
     .insert('div', ":first-child")
-    .attr('class',"metric#{if @type then ' '+@type else ''}")
+    .attr('class', "metric#{if @type then ' ' + @type else ''}")
 
     metric.append('span')
     .attr('class', 'value')
-    .text((d)=>@value_format(@by_type(d)))
+    .text((d)=> @value_format(@by_type(d)))
     if @unit
       metric.append('span')
       .attr('class', 'unit')
       .text(@unit)
-
 
 
 class Graphene.TimeSeriesView extends Backbone.View
@@ -358,7 +359,7 @@ class Graphene.TimeSeriesView extends Backbone.View
     @display_verticals = @options.display_verticals || false
     @width = @options.width || 400
     @height = @options.height || 100
-    @padding = @options.padding || [@line_height*2, 32, @line_height*(3+(@num_labels / @label_columns)), 32] #trbl
+    @padding = @options.padding || [@line_height * 2, 32, @line_height * (3 + (@num_labels / @label_columns)), 32] #trbl
     @title = @options.title
     @firstrun = true
     @parent = @options.parent || '#parent'
@@ -369,12 +370,12 @@ class Graphene.TimeSeriesView extends Backbone.View
 
     @vis = d3.select(@parent).append("svg")
     .attr("class", "tsview")
-    .attr("width",  @width  + (@padding[1]+@padding[3]))
-    .attr("height", @height + (@padding[0]+@padding[2]))
+    .attr("width", @width + (@padding[1] + @padding[3]))
+    .attr("height", @height + (@padding[0] + @padding[2]))
     .append("g")
     .attr("transform", "translate(" + @padding[3] + "," + @padding[0] + ")")
     # Is this used in the timeseries? -dvdv
-    @value_format  = @options.value_format || ".3s"
+    @value_format = @options.value_format || ".3s"
     @value_format = d3.format(@value_format)
 
     @model.bind('change', @render)
@@ -385,7 +386,11 @@ class Graphene.TimeSeriesView extends Backbone.View
     console.log("rendering.")
     data = @model.get('data')
 
-    data = if data && data.length > 0 then data else [{ ymax: @null_value, ymin: @null_value, points: [[@null_value, 0],[@null_value, 0]] }]
+    data = if data && data.length > 0 then data else [{
+      ymax: @null_value,
+      ymin: @null_value,
+      points: [[@null_value, 0], [@null_value, 0]]
+    }]
 
     #
     # find overall min/max of sets
@@ -398,9 +403,9 @@ class Graphene.TimeSeriesView extends Backbone.View
     #
     # build dynamic x & y metrics.
     #
-    xpoints = _.flatten (d.points.map((p)->p[1]) for d in data)
-    xmin = _.min xpoints, (x)->x.valueOf()
-    xmax = _.max xpoints, (x)->x.valueOf()
+    xpoints = _.flatten (d.points.map((p)-> p[1]) for d in data)
+    xmin = _.min xpoints, (x)-> x.valueOf()
+    xmax = _.max xpoints, (x)-> x.valueOf()
 
     x = d3.time.scale().domain([xmin, xmax]).range([0, @width])
     y = d3.scale.linear().domain([dmin.ymin_graph, dmax.ymax_graph]).range([@height, 0]).nice()
@@ -425,7 +430,7 @@ class Graphene.TimeSeriesView extends Backbone.View
     #
     if @sort_labels
       order = if(@sort_labels == 'desc') then -1 else 1
-      data = _.sortBy(data, (d)-> order*d.ymax)
+      data = _.sortBy(data, (d)-> order * d.ymax)
 
 
     # let observer know about this
@@ -460,11 +465,13 @@ class Graphene.TimeSeriesView extends Backbone.View
       # so enter() exit() semantics are invalid. We will append here, and later just replace (update).
       # To see an idiomatic d3 handling, take a look at the legend fixture.
       #
-      vis.selectAll("path.line").data(points).enter().append('path').attr("d", line).attr('class',  (d,i) -> 'line '+"h-col-#{i+1}")
-      vis.selectAll("path.area").data(points).enter().append('path').attr("d", area).attr('class',  (d,i) -> 'area '+"h-col-#{i+1}")
+      vis.selectAll("path.line").data(points).enter().append('path').attr("d", line).attr('class',
+      (d, i) -> 'line ' + "h-col-#{i + 1}")
+      vis.selectAll("path.area").data(points).enter().append('path').attr("d", area).attr('class',
+      (d, i) -> 'area ' + "h-col-#{i + 1}")
 
       if (@options.warn && (dmax.ymax_graph > @options.warn))
-        warnData = [[[@options.warn, xmin],[@options.warn, xmax]]]
+        warnData = [[[@options.warn, xmin], [@options.warn, xmax]]]
         vis.selectAll("path.line-warn")
         .data(warnData)
         .enter()
@@ -474,7 +481,7 @@ class Graphene.TimeSeriesView extends Backbone.View
         .attr('class', 'line-warn')
 
       if (@options.error && (dmax.ymax_graph > @options.error))
-        errorData= [[[@options.error, xmin],[@options.error, xmax]]]
+        errorData = [[[@options.error, xmin], [@options.error, xmax]]]
         vis.selectAll("path.line-error")
         .data(errorData)
         .enter()
@@ -493,7 +500,7 @@ class Graphene.TimeSeriesView extends Backbone.View
         .text(@title)
 
       @legend = vis.append('svg:g')
-      .attr('transform', "translate(0, #{@height+@line_height*2})")
+      .attr('transform', "translate(0, #{@height + @line_height * 2})")
       .attr('class', 'legend')
 
     #---------------------------------------------------------------------------------------#
@@ -507,7 +514,7 @@ class Graphene.TimeSeriesView extends Backbone.View
 
     # first inject datapoints into legend items.
     # note the data mapping is by label name (not index)
-    leg_items = @legend.selectAll('g.l').data(_.first(data, @num_labels), (d)->Math.random())
+    leg_items = @legend.selectAll('g.l').data(_.first(data, @num_labels), (d)-> Math.random())
 
     # remove legend item.
     leg_items.exit().remove()
@@ -515,17 +522,18 @@ class Graphene.TimeSeriesView extends Backbone.View
     # only per entering item, attach a color box and text.
     litem_enters = leg_items.enter()
     .append('svg:g')
-    .attr('transform', (d, i) => "translate(#{(i % @label_columns) * @label_offset}, #{parseInt(i / @label_columns) * @line_height})")
+    .attr('transform',
+    (d, i) => "translate(#{(i % @label_columns) * @label_offset}, #{parseInt(i / @label_columns) * @line_height})")
     .attr('class', 'l')
     litem_enters.append('svg:rect')
     .attr('width', 5)
     .attr('height', 5)
-    .attr('class', (d,i) -> 'ts-color '+"h-col-#{i+1}")
+    .attr('class', (d, i) -> 'ts-color ' + "h-col-#{i + 1}")
 
     litem_enters_a = litem_enters.append('svg:a')
     .attr('xlink:href', (d) => @label_href(d.label))
     .attr('class', 'l')
-    .attr('id', (d, i) =>  @name + "-" + i)
+    .attr('id', (d, i) => @name + "-" + i)
 
     litem_enters_text = litem_enters_a.append('svg:text')
     .attr('dx', 10)
@@ -536,18 +544,18 @@ class Graphene.TimeSeriesView extends Backbone.View
     litem_enters_text.append('svg:tspan')
     .attr('class', 'min-tag')
     .attr('dx', 10)
-    .text((d) => @value_format(d.ymin)+"min")
+    .text((d) => @value_format(d.ymin) + "min")
 
     litem_enters_text.append('svg:tspan')
     .attr('class', 'max-tag')
     .attr('dx', 2)
-    .text((d) => @value_format(d.ymax)+"max")
+    .text((d) => @value_format(d.ymax) + "max")
 
     if @show_current is true
       litem_enters_text.append('svg:tspan')
       .attr('class', 'last-tag')
       .attr('dx', 2)
-      .text((d) => @value_format(d.last)+"last")
+      .text((d) => @value_format(d.last) + "last")
 
     #
     # update the graph
@@ -558,7 +566,7 @@ class Graphene.TimeSeriesView extends Backbone.View
     vis.selectAll("path.area")
     .data(points)
     .attr("d", area)
-    .attr("id", (d, i) =>  "a-" + @name + "-" + i)
+    .attr("id", (d, i) => "a-" + @name + "-" + i)
     .transition()
     .ease("linear")
     .duration(@animate_ms)
@@ -566,7 +574,7 @@ class Graphene.TimeSeriesView extends Backbone.View
     vis.selectAll("path.line")
     .data(points)
     .attr("d", line)
-    .attr("id", (d, i) =>  "l-" + @name + "-" + i)
+    .attr("id", (d, i) => "l-" + @name + "-" + i)
     .transition()
     .ease("linear")
     .duration(@animate_ms)
@@ -584,19 +592,19 @@ class Graphene.BarChartView extends Backbone.View
     @display_verticals = @options.display_verticals || false
     @width = @options.width || 400
     @height = @options.height || 100
-    @padding = @options.padding || [@line_height*2, 32, @line_height*(3+@num_labels), 32] #trbl
+    @padding = @options.padding || [@line_height * 2, 32, @line_height * (3 + @num_labels), 32] #trbl
     @title = @options.title
     @label_formatter = @options.label_formatter || (label) -> label
     @firstrun = true
     @parent = @options.parent || '#parent'
     @null_value = 0
-    @value_format  = @options.value_format || ".3s"
+    @value_format = @options.value_format || ".3s"
     @value_format = d3.format(@value_format)
 
     @vis = d3.select(@parent).append("svg")
     .attr("class", "tsview")
-    .attr("width",  @width  + (@padding[1]+@padding[3]))
-    .attr("height", @height + (@padding[0]+@padding[2]))
+    .attr("width", @width + (@padding[1] + @padding[3]))
+    .attr("height", @height + (@padding[0] + @padding[2]))
     .append("g")
     .attr("transform", "translate(" + @padding[3] + "," + @padding[0] + ")")
     @model.bind('change', @render)
@@ -608,7 +616,7 @@ class Graphene.BarChartView extends Backbone.View
 
     dmax = _.max data, (d)-> d.ymax
     dmin = _.min data, (d)-> d.ymin
-    data = _.sortBy(data, (d)-> 1*d.ymax)
+    data = _.sortBy(data, (d)-> 1 * d.ymax)
     points = _.map data, (d)-> d.points
 
     # Find the minimum and maximum timestamps
@@ -620,8 +628,8 @@ class Graphene.BarChartView extends Backbone.View
     orderedTimestamps = _.uniq (_.sortBy timestamps, (ts)-> ts), true, (ts)-> ts.getTime()
     differences = []
     _.each orderedTimestamps, (ts, index, list)->
-      if list[index+1] != undefined
-        differences.push list[index+1] - ts
+      if list[index + 1] != undefined
+        differences.push list[index + 1] - ts
     timestampDifference = (_.min differences)
 
     # Create x and y scales
@@ -672,7 +680,7 @@ class Graphene.BarChartView extends Backbone.View
         .text(@title)
 
       @legend = vis.append('svg:g')
-      .attr('transform', "translate(0, #{@height+@line_height*2})")
+      .attr('transform', "translate(0, #{@height + @line_height * 2})")
       .attr('class', 'legend')
 
     #---------------------------------------------------------------------------------------#
@@ -682,7 +690,7 @@ class Graphene.BarChartView extends Backbone.View
     # update the legend (dynamic legend ordering responds to min/max)
     # first inject datapoints into legend items.
     # note the data mapping is by label name (not index)
-    leg_items = @legend.selectAll('g.l').data(_.first(data, @num_labels), (d)->Math.random())
+    leg_items = @legend.selectAll('g.l').data(_.first(data, @num_labels), (d)-> Math.random())
 
     # remove legend item.
     leg_items.exit().remove()
@@ -690,12 +698,12 @@ class Graphene.BarChartView extends Backbone.View
     # only per entering item, attach a color box and text.
     litem_enters = leg_items.enter()
     .append('svg:g')
-    .attr('transform', (d, i) => "translate(0, #{i*@line_height})")
+    .attr('transform', (d, i) => "translate(0, #{i * @line_height})")
     .attr('class', 'l')
     litem_enters.append('svg:rect')
     .attr('width', 5)
     .attr('height', 5)
-    .attr('class', (d,i) -> 'ts-color '+"h-col-#{i+1}")
+    .attr('class', (d, i) -> 'ts-color ' + "h-col-#{i + 1}")
     litem_enters_text = litem_enters.append('svg:text')
     .attr('dx', 10)
     .attr('dy', 6)
@@ -706,16 +714,16 @@ class Graphene.BarChartView extends Backbone.View
     litem_enters_text.append('svg:tspan')
     .attr('class', 'min-tag')
     .attr('dx', 10)
-    .text((d) => @value_format(d.ymin)+"min")
+    .text((d) => @value_format(d.ymin) + "min")
     litem_enters_text.append('svg:tspan')
     .attr('class', 'max-tag')
     .attr('dx', 2)
-    .text((d) => @value_format(d.ymax)+"max")
+    .text((d) => @value_format(d.ymax) + "max")
 
     # Draw new rectangles
     _.each points, (series, i)->
-      className = "h-col-" + (i+1)
-      vis.selectAll("rect.area."+className)
+      className = "h-col-" + (i + 1)
+      vis.selectAll("rect.area." + className)
       .data(series)
       .enter()
       .append("rect")
@@ -726,8 +734,8 @@ class Graphene.BarChartView extends Backbone.View
 
     # Update existing rectangles
     _.each points, (series, i)->
-      className = "h-col-" + (i+1)
-      vis.selectAll("rect.area."+className)
+      className = "h-col-" + (i + 1)
+      vis.selectAll("rect.area." + className)
       .data(series)
       .transition().ease("linear").duration(@animate_ms)
       .attr("x", (d, j)-> calculateX(d, j, i))
