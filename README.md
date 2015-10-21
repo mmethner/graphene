@@ -46,20 +46,16 @@ and app/js. Take note that `dashboard.html` points to the `build` folder
 where your assets are automatically built to.
 
 
-
-
 ## Building a Dashboard
 
 You are probably wondering how do you disconnect the demo data provider
 and plug the Graphite data source. Don't worry - more about it
-after this.  
-
+after this.
 
 As of now, you can place 3 types of data-enabled widgets on your
 dashboard: `TimeSeries`, `GaugeLabel`, and a `GaugeGadget`  
 You can have as many of these as you want, and you can also hook up
 several widgets to the same data source.
-
 
 To build a new dashboard, you can/should use the builder:
 
@@ -69,6 +65,11 @@ g.demo(); // hook up demo provider, override all urls.
 g.build(description);
 ```
 
+To stop polling, e.g. Single Page Applications with AngularJS, use:
+
+```javascript
+g.stop()
+```
 
 Where `description` will be the hardest thing you'll have to do here. It is a hash structure, note that urls (since we use demo provider) do nothing. Here:
 
@@ -100,7 +101,6 @@ description = {
 }
 ```
 
-
 That's it basically. Advise the example for how your page should be
 structured.
 
@@ -113,9 +113,11 @@ idea of how your dashboard looks like in "standard" graphite dashboard.
 This means you can go ahead and build (or use) your dash with the
 "standard" dashboard tool that Graphite provides.  
 
+
 ## Cross-Domain
 In any case, if you don't have your dashboard on the Graphite domain,
 you might have a cross-domain issue. In this case please set up your Chrome browser with `google-chrome --disable-web-security`.
+
 
 ## Graphite Data API
 Then, given that you saved your Graphite dashboard named `resources`,
@@ -133,7 +135,6 @@ Graphene-ready URL!
 
 
     http://<graphite>/render?from=-2hours&until=now&width=400&height=250&target=some.metric&title=my_metric&format=json
-
 
 
 # Autodiscovery
@@ -189,7 +190,6 @@ description.
 * `value_format` - you can specify a value formatter (see d3)
 
 
-
 ### GaugeGadget
 
 * `title` - again, gauge title
@@ -228,14 +228,15 @@ you'll find the quality of render isn't affected.
 
 Applying just common CSS rules should give you everything that you need.
 
+
 ## Colors
+
 A good thing to think about is colors in your graph. In a time series,
 you'd want each graph to appear distinct from the other, but still keep
 a general notion of style (relate to the previous one).  
 To do that, I've generated colors based on HSL, taking the next color on
 the wheel serially, and keeping a good distance for a good contrast.  
 For more detail, see `/tools`
-
 
 # Roadmap
 
@@ -250,10 +251,8 @@ as various levels of alerts. The goal is to be able to incorporate
  source control history (GitHub events), and alert feeds from other systems.
 
 
-
-
-
 # Thanks!
+
 I'd like to thank (chronological order):
 
 * Mike Bostock - for D3 itself, its awesome!. I found myself experimenting hours upon hours with it,
@@ -274,6 +273,7 @@ I'd like to thank (chronological order):
 * EButlerIV - contributions
 * David CHAU (davidchau) - contributions
 * Phil Cohen (phlipper) - contributions
+* Mathias Methner (mmethner) - contributions
 
 # Contributing
 
@@ -282,4 +282,4 @@ Fork, implement, add tests, pull request, get my everlasting thanks and a respec
 
 # Copyright
 
-Copyright (c) 2012 [Dotan Nahum](http://gplus.to/dotan) [@jondot](http://twitter.com/jondot). See MIT-LICENSE for further details.
+Copyright (c) 2015 [Dotan Nahum](http://gplus.to/dotan) [@jondot](http://twitter.com/jondot). See MIT-LICENSE for further details.
