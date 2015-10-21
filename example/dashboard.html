@@ -1,60 +1,69 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Dashboard</title>
-    <link rel="stylesheet" href="/build/index.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="index.css" type="text/css" media="screen" charset="utf-8">
     <style type="text/css">
 
-      /*
-       * demo page bootstrap customizations
-       */
-      #hero-two{
-        text-align:center;
-      }
-      .hero-row{
-        margin-bottom:8em;
-        text-shadow: 0px 1px 4px black;
-      }
-      #hero-one, #hero-three{ padding-top:10em;}
-      h2{
-        color:#fff;
-      }
-      #graphite{
-        stroke-width: 2px;
-      }
+        /*
+         * demo page bootstrap customizations
+         */
+        #hero-two {
+            text-align: center;
+        }
+
+        .hero-row {
+            margin-bottom: 8em;
+            text-shadow: 0px 1px 4px black;
+        }
+
+        #hero-one, #hero-three {
+            padding-top: 10em;
+        }
+
+        h2 {
+            color: #fff;
+        }
+
+        #graphite {
+            stroke-width: 2px;
+        }
+
+        /*
+         * graphene high-contrast theme customizations
+         */
+        svg.tsview {
+            background: none;
+        }
+
+        .ggview .gauge circle.outer {
+            stroke: none;
+            fill: none;
+        }
+
+        .ggview .gauge circle.inner {
+            stroke: none;
+            fill: none;
+        }
+
+        body {
+            background: url(/images/diagmonds.png)
+        }
+
+        .span4 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
 
 
-      /*
-       * graphene high-contrast theme customizations
-       */
-      svg.tsview{
-        background:none;
-      }
-      .ggview .gauge circle.outer{
-        stroke:none;
-        fill:none;
-      }
-      .ggview .gauge circle.inner{
-        stroke:none;
-        fill:none;
-      }
-      body{
-        background: url(/images/diagmonds.png)
-      }
-      .span4{
-        text-align:center;
-      }
-      </style>
-  </head>
-  <body>
-    
-
-    <div id="dashboard" class="container-fluid">
-      <div class="row-fluid hero-row">
+<div id="dashboard" class="container-fluid">
+    <div class="row-fluid hero-row">
         <div id="hero-one" class="span4">
         </div>
         <div id="hero-two" class="span4">
-          <svg id="graphite" title="graphite" width="347.409px" height="115.278px" viewBox="0 0 347.409 115.278" enable-background="new 0 0 347.409 115.278"
+            <svg id="graphite" title="graphite" width="347.409px" height="115.278px" viewBox="0 0 347.409 115.278" enable-background="new 0 0 347.409 115.278"
 	 xml:space="preserve">
         <g>
           <polygon fill="none"  stroke-miterlimit="10" points="2.448,58.482 12.782,40.279 35.115,40.279 
@@ -88,45 +97,55 @@
           <polyline fill="none"  stroke-miterlimit="10" points="325.269,115.278 314.269,96.944 
             325.269,78.612 314.269,59.278 325.269,41.613 	"/>
           <line fill="none"  stroke-miterlimit="10" x1="325.269" y1="78.612" x2="347.409" y2="78.612"/>
-          </g><br/><br/>
-      <h2>A <a href="">D3.js</a>, <a href="">Backbone.js</a> based <a
-      href="">Graphite</a> Dashboard Toolkit.</h2>
-      <br/><br/>
+          </g>
+        </svg>
+            <br/><br/>
 
-    <a class="btn btn-large btn-orange">View on Github</a> <span
-      style="font-size:1.2em">&nbsp;</span>
-    <a href="https://twitter.com/intent/follow?screen_name=jondot"
-    class="btn btn-large btn-blk"><i></i>Follow @jondot</a>
+            <h2>A <a href="https://d3js.org/">D3.js</a>, <a href="http://backbonejs.org/">Backbone.js</a> based <a
+                    href="http://graphite.readthedocs.org/en/latest/">Graphite</a> Dashboard Toolkit.</h2>
+            <br/><br/>
+
+            <a class="btn btn-large btn-orange">View on Github</a> <span
+                style="font-size:1.2em">&nbsp;</span>
+            <a href="https://twitter.com/intent/follow?screen_name=jondot"
+               class="btn btn-large btn-blk"><i></i>Follow @jondot</a>
 
         </div>
         <div id="hero-three" class="span3">
-         
-        </div>
-      </div>
 
-      <div class="row-fluid">
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span12 pagination-centered">
+            <button id="stop" class="btn btn-large btn-primary">Stop polling</button>
+        </div>
+    </div>
+
+    <div class="row-fluid">
         <div id="g1-1" class="span4">
         </div>
         <div id="g1-2" class="span4">
         </div>
         <div id="g1-3" class="span4">
         </div>
-      </div>
+    </div>
 
-      <div class="row-fluid">
+    <div class="row-fluid">
         <div id="g2-1" class="span4">
         </div>
         <div id="g2-2" class="span4">
         </div>
         <div id="g2-3" class="span4">
         </div>
-      </div>
     </div>
+</div>
 
-    <script type="text/javascript" src="/vendor/js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="/build/index.js"></script>    
-    <script type="text/javascript" src="example-dash.js"></script>    
-      
 
-  </body>
+<script type="text/javascript" src="/vendor/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/graphene.min.js"></script>
+<script type="text/javascript" src="example-dash.js"></script>
+
+
+</body>
 </html>

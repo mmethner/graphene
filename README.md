@@ -65,12 +65,6 @@ g.demo(); // hook up demo provider, override all urls.
 g.build(description);
 ```
 
-To stop polling, e.g. Single Page Applications with AngularJS, use:
-
-```javascript
-g.stop()
-```
-
 Where `description` will be the hardest thing you'll have to do here. It is a hash structure, note that urls (since we use demo provider) do nothing. Here:
 
 ```javascript
@@ -101,9 +95,14 @@ description = {
 }
 ```
 
+To stop polling, e.g. Single Page Applications with AngularJS, use:
+
+```javascript
+g.stop()
+```
+
 That's it basically. Advise the example for how your page should be
 structured.
-
 
 ## Using Real Data
 

@@ -92,10 +92,16 @@
     }
   };
 
-
   var g = new Graphene;
   g.demo();
   g.build(description);
+
+  $(document).ready(function () {
+    $("#stop").click(function (e) {
+      g.stop();
+      e.preventDefault();
+    });
+  });
 
 
 }).call(this);
