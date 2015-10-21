@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css"
+          media="screen" charset="utf-8">
+    <link rel="stylesheet" href="css/graphene.min.css" type="text/css" media="screen" charset="utf-8">
+    <style type="text/css">
+
+        h2 {
+            color: #fff;
+        }
+
+        #graphite {
+            stroke-width: 2px;
+        }
+
+        #dashboard {
+            padding-top: 6em;
+        }
+
+        /*
+         * graphene high-contrast theme customizations
+         */
+        svg.tsview {
+            background: none;
+        }
+
+        .ggview .gauge circle.outer {
+            stroke: none;
+            fill: none;
+        }
+
+        .ggview .gauge circle.inner {
+            stroke: none;
+            fill: none;
+        }
+
+        body {
+            background: url(images/diagmonds.png)
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="dashboard" class="row">
+    <div id="hero-one" class="col-md-4"></div>
+
+    <div id="hero-two" class="col-md-4 text-center">
+        <svg id="graphite" title="graphite" width="347.409px" height="115.278px" viewBox="0 0 347.409 115.278" enable-background="new 0 0 347.409 115.278"
+         xml:space="preserve">
+            <g>
+              <polygon fill="none"  stroke-miterlimit="10" points="2.448,58.482 12.782,40.279 35.115,40.279
+                44.782,58.482 34.782,77.696 12.782,77.696 	"/>
+              <polyline fill="none"  stroke-miterlimit="10" points="34.782,77.696 44.782,96.238
+                34.782,114.777 12.448,114.777 	"/>
+            </g>
+            <polyline fill="none"  stroke-miterlimit="10" points="84.157,40.445 61.823,40.445
+              51.157,58.945 62.157,77.445 "/>
+            <polyline fill="none"  stroke-miterlimit="10" points="94.698,77.611 84.032,58.612
+              94.698,40.279 116.032,40.279 126.365,58.945 116.365,77.611 "/>
+            <g>
+              <polygon fill="none"  stroke-miterlimit="10" points="142.989,77.945 132.989,58.945
+                142.989,39.945 165.598,39.945 175.655,58.945 165.598,77.945 	"/>
+              <polyline fill="none"  stroke-miterlimit="10" points="142.989,77.945 132.989,96.445
+                142.989,114.945 	"/>
+            </g>
+            <polyline fill="none"  stroke-miterlimit="10" points="193.655,2.778 182.655,21.443
+              193.655,40.448 182.655,58.434 193.655,77.777 "/>
+            <polyline fill="none"  stroke-miterlimit="10" points="193.655,40.448 215.655,40.448
+              225.322,58.773 215.655,77.777 "/>
+            <g>
+              <polyline fill="none"  stroke-miterlimit="10" points="243.095,115.111 232.095,96.777
+                243.095,78.445 232.095,59.111 243.095,41.445 	"/>
+              <line fill="none"  stroke-miterlimit="10" x1="243.095" y1="78.445" x2="265.235" y2="78.445"/>
+            </g>
+            <polyline fill="none"  stroke-miterlimit="10" points="276.08,77.611 265.414,58.612
+              276.08,40.279 297.414,40.279 307.746,58.945 297.746,77.611 "/>
+            <line fill="none"  stroke-miterlimit="10" x1="265.414" y1="21.276" x2="276.414" y2="39.944"/>
+            <g>
+              <polyline fill="none"  stroke-miterlimit="10" points="325.269,115.278 314.269,96.944
+                325.269,78.612 314.269,59.278 325.269,41.613 	"/>
+              <line fill="none"  stroke-miterlimit="10" x1="325.269" y1="78.612" x2="347.409" y2="78.612"/>
+          </g>
+        </svg>
+        <br/><br/>
+
+        <h2>A <a href="http://d3js.org/">D3.js</a>, <a href="http://backbonejs.org/">Backbone.js</a> based <a
+                href="http://graphite.readthedocs.org/en/latest/">Graphite</a> Dashboard Toolkit.</h2>
+        <br/><br/>
+
+    </div>
+    <div id="hero-three" class="col-md-4"></div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <button id="stop" class="btn btn-lg btn-danger">Stop polling</button>
+    </div>
+</div>
+
+<div class="row">
+    <div id="g1-1" class="col-md-4"></div>
+    <div id="g1-2" class="col-md-4"></div>
+    <div id="g1-3" class="col-md-4"></div>
+</div>
+
+<div class="row">
+    <div id="g2-1" class="col-md-4"></div>
+    <div id="g2-2" class="col-md-4"></div>
+    <div id="g2-3" class="col-md-4"></div>
+</div>
+
+<script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="/graphene.min.js"></script>
+<script type="text/javascript" src="example-dash.js"></script>
+
+</body>
+</html>

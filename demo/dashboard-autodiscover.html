@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Autodiscover</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css"
+          media="screen" charset="utf-8">
+    <link rel="stylesheet" href="css/graphene.min.css" type="text/css" media="screen" charset="utf-8">
+    <style type="text/css">
+
+        h2 {
+            color: #fff;
+        }
+
+        #graphite {
+            stroke-width: 2px;
+        }
+
+        /*
+         * graphene high-contrast theme customizations
+         */
+        svg.tsview {
+            background: none;
+        }
+
+        .ggview .gauge circle.outer {
+            stroke: none;
+            fill: none;
+        }
+
+        .ggview .gauge circle.inner {
+            stroke: none;
+            fill: none;
+        }
+
+        body {
+            background: url(images/diagmonds.png)
+        }
+
+        #dashboard div {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+
+<div id="dashboard" class="row"></div>
+
+<script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="/graphene.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var g = new Graphene;
+        g.discover('http://my.graphite.host.com', 'dev-pollers', function (i, url) {
+            return "#dashboard";
+        }, function (description) {
+            g.build(description);
+            console.log(description);
+        });
+    });
+</script>
+
+
+</body>
+</html>

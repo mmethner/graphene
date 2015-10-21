@@ -1,3 +1,6 @@
 
+.sass-cache
+.tmp
 app/js/*.map
+node_modules
 
