@@ -1,0 +1,14 @@
+{
+  "name": "graphene",
+  "license": "MIT",
+  "main": "graphene.min.js",
+  "ignore": [
+    "*.md",
+    "package.json",
+    "Gruntfile.js",
+    "tools",
+    "node_modules",
+    ".sass-cache",
+    "vendor"
+  ]
+}
