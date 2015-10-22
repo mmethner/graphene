@@ -248,7 +248,7 @@ For more detail, see `/tools`
 I'd like to thank:
 
 * Dotan Nahum [@jondot](http://twitter.com/jondot) and his contributers for building the original graphene
-* Lev Dragunov[gardster](https://github.com/gardster/graphene) for his graphene fork with progress bars
+* Lev Dragunov [gardster](https://github.com/gardster/graphene) for his graphene fork with progress bars
 
 # Contributing
 
