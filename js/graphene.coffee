@@ -82,7 +82,6 @@ class Graphene.GraphiteModel extends Backbone.Model
     ymin: 0
     ymax: 0
     refresh_interval: 10000
-    silent:
 
   debug: () ->
     console.log("#{@get('refresh_interval')}")
@@ -275,15 +274,11 @@ class Graphene.ProgressBarGadgetView extends Backbone.View
     metric.text(@title)
     metric.append('span')
       .attr('class', 'value')
-      .text((d)=>" "+@value_format(@by_type(d)))
+      .text((d)=>" "+@value_format(@by_type(d)))
     if @unit
       metric.append('span')
         .attr('class', 'unit')
         .text(@unit)
-
-
-
-
 
 class Graphene.GaugeGadgetView extends Backbone.View
   className: 'gauge-gadget-view'

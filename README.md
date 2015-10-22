@@ -22,7 +22,7 @@ To start,
 
 ## Running the Example
 
-Use the `/example` dashboard to build on.
+Use the `/demo` dashboard to build on.
 
 You should serve that folder off some kind of a helper webserver. For
 Ruby:
@@ -99,7 +99,7 @@ To stop polling, e.g. Single Page Applications with AngularJS, use:
 g.stop()
 ```
 
-That's it basically. Advise the example for how your page should be
+That's it basically. Advise the demo for how your page should be
 structured.
 
 ## Using Real Data
@@ -155,7 +155,7 @@ specifier` which is responsible to spit out the next graph parent, and a
 You can also use the `description` result as a starting point for
 building a more elaborate dashboard.
 
-Check out an example at `/demo/dashboard-autodiscover.html`
+Check out an demo at `/demo/dashboard-autodiscover.html`
 
 
 # I Want More!
@@ -248,6 +248,7 @@ For more detail, see `/tools`
 I'd like to thank:
 
 * Dotan Nahum [@jondot](http://twitter.com/jondot) and his contributers for building the original graphene
+* Lev Dragunov[gardster](https://github.com/gardster/graphene) for his graphene fork with progress bars
 
 # Contributing
 
