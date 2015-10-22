@@ -1,6 +1,7 @@
 
+.idea
 .sass-cache
 .tmp
-app/js/*.map
+app/js/**/*.map
 node_modules
 
