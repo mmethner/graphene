@@ -52,7 +52,6 @@ module.exports = function (grunt) {
       dist: {
         files: {
           'graphene.min.js': [
-            'vendor/underscore.js',
             'vendor/backbone.js',
             'vendor/d3.js',
             '.tmp/d3.js',

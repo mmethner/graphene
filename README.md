@@ -254,6 +254,10 @@ I'd like to thank:
 
 Fork, implement, add tests, pull request, get my everlasting thanks and a respectable place here :).
 
+# Known Issues
+
+* The current versions depends on very old Backbone and D3 Versions.
+
 
 # Copyright
 
