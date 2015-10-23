@@ -55,11 +55,11 @@ module.exports = function (grunt) {
             'vendor/underscore.js',
             'vendor/backbone.js',
             'vendor/d3.js',
-            'js/d3.gauge.js',
+            '.tmp/d3.js',
             '.tmp/events/graphene.js',
-            '.tmp/graphene.js',
-            '.tmp/modals/graphene.js',
-            '.tmp/views/graphene.js'
+            '.tmp/Graphene.js',
+            '.tmp/modals/Graphene.js',
+            '.tmp/views/Graphene.js'
           ]
         }
       }
