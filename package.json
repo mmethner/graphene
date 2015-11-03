@@ -1,6 +1,6 @@
 {
   "name": "graphene",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "dependencies": {},
   "repository": {},
   "license": "MIT",
@@ -15,6 +15,6 @@
     "time-grunt": "^1.2.2"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=0.12.4"
   }
 }
