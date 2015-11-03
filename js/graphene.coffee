@@ -86,11 +86,11 @@ class Graphene.GraphiteModel extends Backbone.Model
     silent: false
 
   debug: () ->
-    console.log("#{@get('refresh_interval')}") if nor @get('silent')
+    console.log("#{@get('refresh_interval')}") if not @get('silent')
 
   start: () =>
     @refresh()
-    console.log("Starting to poll at #{@get('refresh_interval')}") if nor @get('silent')
+    console.log("Starting to poll at #{@get('refresh_interval')}") if not @get('silent')
     @t_index = setInterval(@refresh, @get('refresh_interval'))
 
   stop: ()=>
@@ -107,7 +107,7 @@ class Graphene.GraphiteModel extends Backbone.Model
       dataType: 'json'
       jsonp: 'jsonp'
       success: (js) =>
-        console.log("got data.") if nor @get('silent')
+        console.log("got data.") if not @get('silent')
         @process_data(js)
     $.ajax options
 
