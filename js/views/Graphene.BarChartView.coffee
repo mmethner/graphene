@@ -1,6 +1,7 @@
 class Graphene.BarChartView extends Backbone.View
   tagName: 'div'
   initialize: () ->
+    @silent = @options.silent || false
     @line_height = @options.line_height || 16
     @animate_ms = @options.animate_ms || 500
     @num_labels = @options.num_labels || 3
@@ -25,7 +26,7 @@ class Graphene.BarChartView extends Backbone.View
     .attr("transform", "translate(" + @padding[3] + "," + @padding[0] + ")")
     @model.bind('change', @render)
   render: () =>
-    console.log "rendering bar chart."
+    console.log "rendering bar chart." if not @silent
 
     # Getting data
     data = @model.get('data')
@@ -164,4 +165,4 @@ class Graphene.BarChartView extends Backbone.View
     vis.transition().ease("linear").duration(@animate_ms).select(".x.axis").call(xAxis)
     vis.select(".y.axis").call(yAxis)
 
-    console.log "done drawing"
+    console.log "done drawing barchart" if not @silent

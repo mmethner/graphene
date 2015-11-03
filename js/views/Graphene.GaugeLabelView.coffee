@@ -2,6 +2,7 @@ class Graphene.GaugeLabelView extends Backbone.View
   className: 'gauge-label-view'
   tagName: 'div'
   initialize: ()->
+    @silent = @options.silent || false
     @unit = @options.unit
     @title = @options.title
     @type = @options.type
@@ -19,7 +20,7 @@ class Graphene.GaugeLabelView extends Backbone.View
       .text(@title)
 
     @model.bind('change', @render)
-    console.log("GL view ")
+    console.log("GaugeLabel view ") if not @silent
 
 
   by_type: (d)=>
@@ -32,7 +33,7 @@ class Graphene.GaugeLabelView extends Backbone.View
 
   render: ()=>
     data = @model.get('data')
-    console.log data
+    console.log("GaugeLabel",data) if not @silent
     datum = if data && data.length > 0 then data[0] else {
     ymax: @null_value,
     ymin: @null_value,

@@ -12,28 +12,29 @@ class Graphene
 
   build: (json) =>
     _.each _.keys(json), (k)=>
-      console.log "building [#{k}]"
-      if @is_demo
-        klass = Graphene.DemoTimeSeries
-      else
-        klass = Graphene.TimeSeries
+      console.log "building [#{k}]" if not @is_silent
 
+      # init backbone model
+      model = if @is_demo then Graphene.DemoTimeSeries else Graphene.TimeSeries
       model_opts = {source: json[k].source}
+      model_opts.silent = @is_silent
       delete json[k].source
       if json[k].refresh_interval
         model_opts.refresh_interval = json[k].refresh_interval
         delete json[k].refresh_interval
-      ts = new klass(model_opts)
+      ts = new model(model_opts)
       @models[k] = ts
 
       _.each json[k], (opts, view) =>
-        klass = eval("Graphene.#{view}View")
+        # init backbone view
+        view = eval("Graphene.#{view}View")
         params = _.extend({
           model: ts,
+          silent: @is_silent,
           ymin: @getUrlParam(model_opts.source, "yMin"),
           ymax: @getUrlParam(model_opts.source, "yMax")
         }, opts)
-        new klass(params)
+        new view(params)
         ts.start()
 
   stop: () =>
@@ -82,13 +83,14 @@ class Graphene.GraphiteModel extends Backbone.Model
     ymin: 0
     ymax: 0
     refresh_interval: 10000
+    silent: false
 
   debug: () ->
-    console.log("#{@get('refresh_interval')}")
+    console.log("#{@get('refresh_interval')}") if nor @get('silent')
 
   start: () =>
     @refresh()
-    console.log("Starting to poll at #{@get('refresh_interval')}")
+    console.log("Starting to poll at #{@get('refresh_interval')}") if nor @get('silent')
     @t_index = setInterval(@refresh, @get('refresh_interval'))
 
   stop: ()=>
@@ -105,7 +107,7 @@ class Graphene.GraphiteModel extends Backbone.Model
       dataType: 'json'
       jsonp: 'jsonp'
       success: (js) =>
-        console.log("got data.")
+        console.log("got data.") if nor @get('silent')
         @process_data(js)
     $.ajax options
 

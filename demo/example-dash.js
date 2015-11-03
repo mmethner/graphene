@@ -33,7 +33,7 @@
         }
       }
     },
-   
+
     "Total Installs": {
       source: "http://localhost:4567/",
       GaugeLabel: {
@@ -60,13 +60,13 @@
         }
       }
     },
-      
+
     "New Message": {
       source: "http://localhost:4567/",
       TimeSeries: {
         parent: '#g1-1',
         title: 'New Message',
-        label_offset: 200, 
+        label_offset: 200,
         label_columns: 2,
         time_span_mins: 12,
         observer: function(data){
@@ -117,7 +117,6 @@
 
   var g = new Graphene;
   g.demo();
-  g.silent();
   g.build(description);
 
   $(document).ready(function () {

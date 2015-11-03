@@ -99,6 +99,12 @@ To stop polling, e.g. Single Page Applications with AngularJS, use:
 g.stop()
 ```
 
+In Production you do not want to see debug output in console. Use:
+
+```javascript
+g.silent()
+```
+
 That's it basically. Advise the demo for how your page should be
 structured.
 

@@ -7,10 +7,10 @@ class Graphene.DemoTimeSeries extends Backbone.Model
     refresh_interval: 3000
 
   debug: ()->
-    console.log("#{@get('refresh_interval')}")
+    console.log("#{@get('refresh_interval')}") if not @get('silent')
 
   start: ()=>
-    console.log("Starting to poll at #{@get('refresh_interval')}")
+    console.log("Starting to poll at #{@get('refresh_interval')}") if not @get('silent')
     @data = []
     _.each _.range(@get 'num_series'), (i)=>
       @data.push({

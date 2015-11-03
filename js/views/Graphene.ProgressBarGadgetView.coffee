@@ -2,6 +2,7 @@ class Graphene.ProgressBarGadgetView extends Backbone.View
   className: 'progressbar-gadget-view'
   tagName: 'div'
   initialize: ()->
+    @silent = @options.silent || false
     @unit   = @options.unit
     @title  = @options.title
     @type   = @options.type
@@ -25,8 +26,7 @@ class Graphene.ProgressBarGadgetView extends Backbone.View
       .text(@title)
 
     @model.bind('change', @render)
-    console.log("PB view ")
-
+    console.log("ProgressBAr view ") if not @silent
 
   by_type:(d)=>
     switch @type
@@ -37,7 +37,7 @@ class Graphene.ProgressBarGadgetView extends Backbone.View
 
   render: ()=>
     data = @model.get('data')
-    console.log data
+    console.log("ProgressBar data", data) if not @silent
     datum = if data && data.length > 0 then data[0] else { ymax: @null_value, ymin: @null_value, points: [[@null_value, 0]] }
 
     # let observer know about this

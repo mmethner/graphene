@@ -2,6 +2,7 @@ class Graphene.GaugeGadgetView extends Backbone.View
   className: 'gauge-gadget-view'
   tagName: 'div'
   initialize: ()->
+    @silent = @options.silent || false
     @title = @options.title
     @type = @options.type
 
@@ -36,7 +37,7 @@ class Graphene.GaugeGadgetView extends Backbone.View
     @gauge.render()
 
     @model.bind('change', @render)
-    console.log("GG view ")
+    console.log("GaugeGadget view ") if not @silent
 
 
   by_type: (d)=>
@@ -48,7 +49,7 @@ class Graphene.GaugeGadgetView extends Backbone.View
         d.points[0][0]
 
   render: ()=>
-    console.log("rendering.")
+    console.log("GaugeGadget rendering.") if not @silent
     data = @model.get('data')
     datum = if data && data.length > 0 then data[0] else {
     ymax: @null_value,

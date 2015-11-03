@@ -2,6 +2,7 @@ class Graphene.TimeSeriesView extends Backbone.View
   tagName: 'div'
 
   initialize: ()->
+    @silent = @options.silent || false
     @name = @options.name || "g-" + parseInt(Math.random() * 1000000)
     @line_height = @options.line_height || 16
     @x_ticks = @options.x_ticks || 4
@@ -36,11 +37,10 @@ class Graphene.TimeSeriesView extends Backbone.View
     @value_format = d3.format(@value_format)
 
     @model.bind('change', @render)
-    console.log("TS view: #{@name} #{@width}x#{@height} padding:#{@padding} animate: #{@animate_ms} labels: #{@num_labels}")
-
+    console.log("TS view: #{@name} #{@width}x#{@height} padding:#{@padding} animate: #{@animate_ms} labels: #{@num_labels}") if not @silent
 
   render: ()=>
-    console.log("rendering.")
+    console.log("rendering.") if not @silent
     data = @model.get('data')
 
     data = if data && data.length > 0 then data else [{
